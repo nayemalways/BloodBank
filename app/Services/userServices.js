@@ -88,7 +88,7 @@ export const UserLoginService = async (req) => {
 
 
          return {status: "Success", message: "Profile updated successfull!"};
-         
+
      }catch(e){
       console.log(e.toString());
       return {status: "Succes", message: "Internal server error..!"};
@@ -97,7 +97,20 @@ export const UserLoginService = async (req) => {
 
 
  export const ProfileDeleteService = async (req) => {
-     
+     try {
+
+         const userId = req.headers.user_id;
+         const email = req.headers.email;
+
+         // Delete user profile
+         await UserModel.deleteOne({_id: userId, email: email});
+
+         return {status: "Success", message: "Profile delete success"};
+
+     }catch(e) {
+      console.log(e.toString());
+      return {status: "Error", message: "Internal server error..!"}
+     }
  }
 
 
