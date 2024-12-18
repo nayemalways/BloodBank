@@ -77,14 +77,18 @@ export const UserLoginService = async (req) => {
          const email = req.headers.email;
          const reqBody = req.body;
  
+         // User could't update their password and email directly
          if(reqBody.password.length !== 0 || reqBody.email.length !== 0) {
             return {status: "fail", message: "Password not be updated"};
          }
 
-      await UserModel.updateOne({_id: userId, email: email}, reqBody)
+
+         // Update User Profile
+         await UserModel.updateOne({_id: userId, email: email}, reqBody)
 
 
          return {status: "Success", message: "Profile updated successfull!"};
+         
      }catch(e){
       console.log(e.toString());
       return {status: "Succes", message: "Internal server error..!"};
