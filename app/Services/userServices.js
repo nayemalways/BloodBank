@@ -126,7 +126,7 @@ export const UserLoginService = async (req) => {
             {$project: {password: 0}}
          ]);
 
-         
+
          return {status: "Success", data: data};
 
      }catch(e) {
@@ -137,5 +137,14 @@ export const UserLoginService = async (req) => {
 
 
  export const AllUserProfileReadService = async (req) => {
-     
+     try {
+
+         // Find all user profile
+         const data = await UserModel.find();
+         return {status: "Success", data: data};
+
+     }catch(e) {
+      console.log(e.toString());
+      return {status: "Error", message: "Internal server error..!"}
+     }
  }
