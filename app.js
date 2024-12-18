@@ -57,7 +57,7 @@ const options = {
 
 mongoose.connect(MONGODB_CONNECTION, options)
     .then(() => console.log("DB connected"))
-    .catch((e) => console.error(err));
+    .catch((e) => console.log(e));
 
 
 // SET APPLICATION STORAGE
