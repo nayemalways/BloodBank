@@ -1,6 +1,7 @@
 /*----------DEPENDENCIES----------*/
 import UserModel  from "../model/UsersModel.js";
 import bcrypt from "bcrypt";
+import { TokenEncode } from "../utility/tokenUtility.js";
 
 
 
@@ -9,7 +10,7 @@ export const UserRegisterService = async (req) => {
      try {
 
         const UserData = req.body;
-        const isValidData = UserData.firstName && UserData.lastName && UserData.NIDNumber && UserData.phoneNumber && UserData.password && UserData.bloodGroup;
+        const isValidData =  UserData.email && UserData.firstName && UserData.lastName && UserData.NIDNumber && UserData.phoneNumber && UserData.password && UserData.bloodGroup;
  
         // Data check whether user provide all input or not
         if(!isValidData || isValidData === false){
@@ -35,7 +36,34 @@ export const UserRegisterService = async (req) => {
 
 
 export const UserLoginService = async (req) => {
-     
+     try {
+      
+      const {email, password} = req.body;
+
+      // User search by email
+      const data = await UserModel.find({email: email})
+      const user = data[0];
+      if(user.length === 0) {
+         return {status: "fail", message: "No user found"};
+      }
+
+  
+      // Compare with password
+      const hashedPassValidation = await bcrypt.compare(password, user.password);
+      if(!hashedPassValidation) {
+         return {status: "fail", message: "Incorrect password"}
+      }
+
+
+      // Create User Token by _id , email
+      const EncodeToken = TokenEncode(user['_id'], email);
+      return {status: "Success", message: "Login success", Token: EncodeToken};
+ 
+
+     }catch(e) {
+      console.log(e.toString());
+      return {status: "Error", message: "Inernal server error..!"};
+     }
  }
 
  
