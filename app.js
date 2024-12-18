@@ -61,7 +61,7 @@ mongoose.connect(MONGODB_CONNECTION, options)
 
 
 // SET APPLICATION STORAGE
-app.use(express.static('storage')); // The file will recognize randomly
+app.use(express.static('public')); // The file will recognize randomly
 
 
 // SET API ROUTES
