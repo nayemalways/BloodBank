@@ -18,7 +18,10 @@ import {
 
  export const UserLogin = async (req, res) => {
     const result = await UserLoginService(req);
-    res.json(result);
+      // Cookie set
+      const cookieOptions = {expires: new Date(Date.now() + 24 * 60 * 60 * 1000), htttpOnly: false};
+      res.cookie("token", result['Token'], cookieOptions);
+      res.json(result);
  }
 
 

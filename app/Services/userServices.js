@@ -56,7 +56,10 @@ export const UserLoginService = async (req) => {
 
 
       // Create User Token by _id , email
-      const EncodeToken = TokenEncode(user['_id'], email);
+      const userEmail = user['email'];
+      const userID = user['_id'].toString();
+ 
+      const EncodeToken = TokenEncode(userEmail, userID);
       return {status: "Success", message: "Login success", Token: EncodeToken};
  
 
@@ -68,7 +71,24 @@ export const UserLoginService = async (req) => {
 
  
  export const ProfileUpdateService = async (req) => {
-     
+     try {
+
+         const userId = req.headers.user_id;
+         const email = req.headers.email;
+         const reqBody = req.body;
+ 
+         if(reqBody.password.length !== 0 || reqBody.email.length !== 0) {
+            return {status: "fail", message: "Password not be updated"};
+         }
+
+      await UserModel.updateOne({_id: userId, email: email}, reqBody)
+
+
+         return {status: "Success", message: "Profile updated successfull!"};
+     }catch(e){
+      console.log(e.toString());
+      return {status: "Succes", message: "Internal server error..!"};
+     }
  }
 
 
