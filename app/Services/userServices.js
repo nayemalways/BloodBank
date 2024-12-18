@@ -2,7 +2,8 @@
 import UserModel  from "../model/UsersModel.js";
 import bcrypt from "bcrypt";
 import { TokenEncode } from "../utility/tokenUtility.js";
-
+import mongoose from "mongoose";
+const ObjectId = mongoose.Types.ObjectId;
 
 
 
@@ -115,7 +116,23 @@ export const UserLoginService = async (req) => {
 
 
  export const ProfileReadService = async (req) => {
-     
+     try {
+
+         const {email, user_id} = req.headers;
+
+         // Find user profile
+         const data = await UserModel.aggregate([
+            {$match: {_id: new ObjectId(user_id), email: email}},
+            {$project: {password: 0}}
+         ]);
+
+         
+         return {status: "Success", data: data};
+
+     }catch(e) {
+      console.log(e.toString());
+      return {status: "Error", message: "Internal server error..!"}
+     }
  }
 
 
