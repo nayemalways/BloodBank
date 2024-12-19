@@ -39,29 +39,29 @@ export const UserRegisterService = async (req) => {
 export const UserLoginService = async (req) => {
      try {
       
-      const {email, password} = req.body;
+        const {email, password} = req.body;
 
-      // User search by email
-      const data = await UserModel.find({email: email})
-      const user = data[0];
-      if(user.length === 0) {
-         return {status: "fail", message: "No user found"};
-      }
+        // User search by email
+        const data = await UserModel.find({email: email})
+        const user = data[0];
+        if(user.length === 0) {
+            return {status: "fail", message: "No user found"};
+        }
 
-  
-      // Compare with password
-      const hashedPassValidation = await bcrypt.compare(password, user.password);
-      if(!hashedPassValidation) {
-         return {status: "fail", message: "Incorrect password"}
-      }
+    
+        // Compare with password
+        const hashedPassValidation = await bcrypt.compare(password, user.password);
+        if(!hashedPassValidation) {
+            return {status: "fail", message: "Incorrect password"}
+        }
 
 
-      // Create User Token by _id , email
-      const userEmail = user['email'];
-      const userID = user['_id'].toString();
- 
-      const EncodeToken = TokenEncode(userEmail, userID);
-      return {status: "Success", message: "Login success", Token: EncodeToken};
+        // Create User Token by _id , email
+        const userEmail = user['email'];
+        const userID = user['_id'].toString();
+    
+        const EncodeToken = TokenEncode(userEmail, userID);
+        return {status: "Success", message: "Login success", Token: EncodeToken};
  
 
      }catch(e) {
